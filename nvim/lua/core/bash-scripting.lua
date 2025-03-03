@@ -26,6 +26,8 @@ vim.keymap.set("n", "<leader>bas", function()
 		-- If the first line is not empty and not a shebang, print a message
 		print("Something already exists at the first line; shebang not inserted.")
 	end
+	-- Save the file and reload it
+	vim.api.nvim_command("write | edit")
 end, { silent = true })
 
 -- For Normal shellscripting
@@ -36,13 +38,9 @@ vim.keymap.set("n", "<leader>bs", function()
 	-- Check if the first line is empty
 	if first_line == "" then
 		-- Insert the shebang line
-
 		vim.api.nvim_set_current_line("#!/bin/bash")
-
 		-- Move to the next line and insert a comment
 		vim.api.nvim_command("normal! o")
-		-- Switch to insert mode
-		-- vim.api.nvim_command("startinsert")
 	elseif first_line == "#!/usr/bin/env bash" or first_line == "#!/bin/bash" then
 		-- If the first line is already a valid shebang, do nothing
 		print("Shebang already exists; no action taken.")
@@ -50,6 +48,8 @@ vim.keymap.set("n", "<leader>bs", function()
 		-- If the first line is not empty and not a shebang, print a message
 		print("Something already exists at the first line; shebang not inserted.")
 	end
+	-- Save the file and reload it
+	vim.api.nvim_command("write | edit")
 end, { silent = true })
 
 -- For Python
@@ -73,6 +73,8 @@ vim.keymap.set("n", "<leader>py", function()
 		-- If the first line is not empty and not a shebang, print a message
 		print("Something already exists at the first line; shebang not inserted.")
 	end
+	-- Save the file and reload it
+	vim.api.nvim_command("write | edit")
 end, { silent = true })
 
 -- -- Hotkey to insert the shebang line at the top of any file without #comment
@@ -103,7 +105,14 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 		local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
 
 		-- Check for valid shebangs
-		if first_line and (first_line:find("#!/usr/bin/env bash") or first_line:find("#!/bin/bash")) then
+		if
+			first_line
+			and (
+				first_line:find("#!/usr/bin/env bash")
+				or first_line:find("#!/bin/bash")
+				or first_line:find("#!/usr/bin/python3")
+			)
+		then
 			-- Execute the command silently
 			vim.api.nvim_command("silent !chmod +x " .. vim.fn.expand("%:p"))
 		end
@@ -111,3 +120,6 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 vim.api.nvim_set_keymap("n", "<F8>", ":w<CR>:!shellcheck %:t<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<F9>", ":w<CR>:!pycodestyle %:t<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<F10>", ":w<CR>:!puppet-lint %:t<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<F11>", ":w<CR>:!betty %:t<CR>", { noremap = true, silent = true })
