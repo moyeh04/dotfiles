@@ -1,13 +1,17 @@
+-- plugins/nvim-notify.lua
 return {
 	"rcarriga/nvim-notify",
+
 	config = function()
 		local notify = require("notify")
 
 		notify.setup({
+
 			-- Set rendering style to compact with line wrapping
 			render = "wrapped-compact",
 
 			-- Define maximum width for notifications
+
 			max_width = 50,
 
 			-- Set display time in milliseconds
