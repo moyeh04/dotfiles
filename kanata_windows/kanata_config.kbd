@@ -1,0 +1,16 @@
+;; Caps to escape/control configuration for Kanata
+
+(defsrc
+  caps
+  lctrl  ;; Add lctrl to the defsrc
+)
+
+(defalias
+  escctrl (tap-hold 100 100 esc lctl)
+  lctrlcaps (tap-hold 250 250 caps lctrl)
+)
+
+(deflayer base
+  @escctrl
+  @lctrlcaps  ;; Add the lctrlcaps alias to the base layer
+)
