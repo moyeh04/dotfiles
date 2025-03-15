@@ -1,0 +1,71 @@
+live_config_reload = true
+
+# TokyoDark Alacritty Colors
+# Default colors
+[colors.primary]
+background = '#11121d' # Dark background for main interface
+foreground = '#c0caf5' # Lighter primary text color from lazygit `defaultFgColor`
+
+[colors.normal]
+black = '#06080a'   # Dark shade for normal black
+blue = '#7aa2f7'    # From lazygit `optionsTextColor` for readability
+cyan = '#38a89d'    # Slightly bright for cyan accents
+green = '#95c561'   # Subtle green
+magenta = '#a485dd' # Muted purple tone
+red = '#ee6d85'     # Eye-catching red for important items
+white = '#c0caf5'   # Matches primary foreground for consistency
+yellow = '#d7a65f'  # Warm yellow for visibility
+
+[colors.bright]
+black = '#212234'   # Slightly lighter black for bright backgrounds
+blue = '#7aa2f7'    # Consistent blue from lazygit
+cyan = '#38a89d'    # Matching cyan for bright text
+green = '#95c561'   # Consistent bright green
+magenta = '#bb9af7' # Brighter purple from lazygit `cherryPickedCommitBgColor`
+red = '#db4b4b'     # Adjusted red from lazygit `unstagedChangesColor`
+white = '#c0caf5'   # Brighter white for better contrast
+yellow = '#e0af68'  # Adjusted yellow from lazygit `markedBaseCommitBgColor`
+
+[colors.cursor]
+cursor = '#c0caf5' # Consistent foreground color for cursor
+text = '#11121d'   # Matches background for cursor text
+
+[colors.selection]
+background = '#283457' # Inspired by lazygit `selectedLineBgColor` for better contrast
+text = '#c0caf5'       # Consistent text color for readability on selection
+
+# Indexed Colors
+[[colors.indexed_colors]]
+index = 16
+color = '#7aa2f7' # Blue for indexed items from lazygit `optionsTextColor`
+
+[[colors.indexed_colors]]
+index = 17
+color = '#db4b4b' # Red for indexed items from lazygit `unstagedChangesColor`
+
+
+[shell]
+program = "C:\\windows\\system32\\wsl.exe"
+args = ["--cd ~"]
+
+[font]
+normal = { family = "CommitMono Nerd Font", style = "Regular" }
+bold = { family = "CommitMono Nerd Font", style = "Bold" }
+italic = { family = "CommitMono Nerd Font", style = "Italic" }
+bold_italic = { family = "CommitMono Nerd Font", style = "Bold Italic" }
+size = 16
+#for full screen it's Alt + Enter
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+dynamic_title = true
+decorations = "full"
+
+[scrolling]
+history = 0
+
+[window.padding]
+x = 15
+y = 15
