@@ -19,6 +19,10 @@ return {
 				"eslint_d", -- ts/js linter
 				"shfmt", -- Shell formatter
 				"checkmake", -- linter for Makefiles
+				"gofumpt",
+				"goimports-reviser",
+				"golines",
+				"gopls",
 				"lua-language-server",
 				"typescript-language-server",
 			},
@@ -33,6 +37,8 @@ return {
 			formatting.stylua,
 			formatting.shfmt.with({ args = { "-i", "4" } }),
 			formatting.terraform_fmt,
+			formatting.goimports_reviser,
+			formatting.golines,
 			require("none-ls.formatting.ruff").with({ extra_args = { "--extend-select", "I", "--line-length", "80" } }),
 			require("none-ls.formatting.ruff_format"),
 		}
