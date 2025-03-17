@@ -24,6 +24,8 @@ return {
 				"golines",
 				"gopls",
 				"lua-language-server",
+				"rust-analyzer",
+				"rustfmt",
 				"typescript-language-server",
 			},
 			automatic_installation = true,
