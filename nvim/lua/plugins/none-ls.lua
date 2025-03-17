@@ -19,6 +19,8 @@ return {
 				"eslint_d", -- ts/js linter
 				"shfmt", -- Shell formatter
 				"checkmake", -- linter for Makefiles
+				"lua-language-server",
+				"typescript-language-server",
 			},
 			automatic_installation = true,
 		})
