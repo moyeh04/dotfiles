@@ -2,6 +2,7 @@ require("core.options")
 require("core.keymaps")
 require("core.bash-scripting")
 -- require("core.snippets")
+vim.g.python3_host_prog = vim.fn.trim(vim.fn.system("which python3"))
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

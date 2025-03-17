@@ -15,8 +15,12 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 #:$PATH -> First in order
 #$PATH: -> Latest in order
+export PATH="/usr/local/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:~/bin:$PATH"
 
-export PATH="/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:~/bin:/usr/local/bin:$PATH"
+# Source the custom Python environment fix script
+if [ -f "$HOME/.config/zsh/.pyenv" ]; then
+    source "$HOME/.config/zsh/.pyenv"
+fi
 
 
 # Add in zsh plugins
