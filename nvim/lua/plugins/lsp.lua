@@ -214,6 +214,17 @@ return {
 			cssls = {},
 			texlab = {},
 			marksman = {},
+			gopls = {
+				filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				settings = {
+					env = {
+						GOEXPERIMENT = "rangefunc",
+					},
+					formatting = {
+						gofumpt = true,
+					},
+				},
+			},
 		}
 
 		-- Ensure the servers and tools above are installed
