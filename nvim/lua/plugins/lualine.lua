@@ -25,8 +25,13 @@ return {
 			sources = { "nvim_diagnostic" },
 			sections = { "error", "warn" },
 
-			symbols = { error = " ", warn = " ", info = " ", hint = " " },
-			colored = false,
+			symbols = {
+				error = " ",
+				warn = " ",
+				info = " ",
+				hint = " ",
+			},
+			colored = true,
 			update_in_insert = false,
 			always_visible = false,
 			cond = hide_in_width,
@@ -34,8 +39,8 @@ return {
 
 		local diff = {
 			"diff",
-			colored = false,
-			symbols = { added = " ", modified = " ", removed = " " },
+			colored = true,
+			symbols = { added = "+", modified = "~", removed = "-" },
 			cond = hide_in_width,
 		}
 
@@ -56,9 +61,9 @@ return {
 
 			sections = {
 				lualine_a = { mode },
-				lualine_b = { "branch" },
-				lualine_c = { filename },
-				lualine_x = { diagnostics, diff, { "encoding" }, { "filetype" } },
+				lualine_b = { "branch", diagnostics, diff },
+				lualine_c = {},
+				lualine_x = { { "encoding" }, { "filetype" }, filename },
 				lualine_y = { "location", recorder_slots }, -- Add recorder_slots here
 				lualine_z = { "progress", recorder_status }, -- Add recorder_status here
 			},

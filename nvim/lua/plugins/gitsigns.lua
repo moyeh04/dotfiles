@@ -1,6 +1,8 @@
--- Adds git related signs to the gutter, as well as utilities for managing changes
 return {
 	"lewis6991/gitsigns.nvim",
+	config = function()
+		require("gitsigns").setup({})
+	end,
 	opts = {
 
 		signs = {
@@ -19,4 +21,11 @@ return {
 			changedelete = { text = "~" },
 		},
 	},
+	vim.api.nvim_set_keymap("n", "<leader>gh", ":Gitsigns preview_hunk<CR>", { noremap = true, silent = true }),
+	vim.api.nvim_set_keymap(
+		"n",
+		"<leader>gb",
+		":Gitsigns toggle_current_line_blame<CR>",
+		{ noremap = true, silent = true }
+	),
 }
