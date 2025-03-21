@@ -5,7 +5,7 @@ return {
 		local mode = {
 			"mode",
 			fmt = function(str)
-				return " " .. str
+				return "" .. str
 			end,
 		}
 
@@ -52,7 +52,7 @@ return {
 			options = {
 				theme = "tokyodark",
 				section_separators = { left = "", right = "" },
-				component_separators = { left = "", right = "" },
+				component_separators = { left = "", right = "" },
 				globalstatus = true,
 				icons_enabled = true,
 				disabled_filetypes = { "alpha", "neo-tree" },
