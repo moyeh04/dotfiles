@@ -1,13 +1,17 @@
 #!/bin/zsh
 
-# --- Dynamic Symlink Setup for Overriding python3.<version> ---
+
+# --- Dynamic Symlink Setup for Overriding Python with Brew-installed Python ---
 # Prerequisites:
-
-# 1. Install python-is-python3 so that when you run "python", it resolves to "python3"
-#    (This ensures the system's apt-installed Python is available via "python").
-# 2. Ensure that your Brew-installed Python (the one you want to use) is in your PATH,
-#    typically found by "which python3".
-
+#
+# 1. Ensure that the Brew-installed Python is installed and in your PATH 
+#    (e.g., run: brew install python).
+# 2. The system's apt-installed Python is not required for this setup.
+#
+# This script will create or update two symlinks in /usr/local/bin:
+#    - "python3"  will point to the Brew-installed Python (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
+#    - "python"   will point to the same Brew-installed Python.
+#
 # Set DEBUG=1 to enable debug messages; leave it unset or 0 for quiet operation.
 DEBUG=${DEBUG:-0}
 
@@ -15,72 +19,72 @@ DEBUG=${DEBUG:-0}
 debug_echo() {
   if [ "$DEBUG" -eq 1 ]; then
     echo "$@"
+
   fi
 }
 
-# Step 1: Get the system's default python (apt-managed).
-SYSTEM_PYTHON=$(which python)
-debug_echo "System python is: $SYSTEM_PYTHON"
-
-
-# Step 2: Get the version of the system python.
-# This outputs something like "3.10.12" or "3.11.x"
-SYSTEM_VERSION=$(python --version 2>&1 | awk '{print $2}')
-debug_echo "System python version: $SYSTEM_VERSION"
-
-# Step 3: Extract the major and minor version from SYSTEM_VERSION (e.g. "3.10" or "3.11").
-
-SYSTEM_MAJOR_MINOR=$(echo $SYSTEM_VERSION | cut -d. -f1,2)
-debug_echo "System major.minor version: $SYSTEM_MAJOR_MINOR"
-
-# Step 4: Define the desired symlink location.
-# We use this to override the command for python3.<version> (e.g., /usr/local/bin/python3.10)
-SYMLINK="/usr/local/bin/python${SYSTEM_MAJOR_MINOR}"
-debug_echo "Symlink to create: $SYMLINK"
-
-# --- New Step: Clean Up Outdated Symlinks ---
-
-# Remove any symlink in /usr/local/bin that matches "python3.*"
-# but is not the one corresponding to the current system version.
-for f in /usr/local/bin/python3.*; do
-  # Check that $f exists and is a symlink.
-  if [ -L "$f" ] && [ "$f" != "$SYMLINK" ]; then
-    debug_echo "Removing outdated symlink: $f"
-    sudo rm "$f"
-  fi
-done
-
-# Step 5: Get the Brew-installed python using which.
-# This should return the Brew-installed interpreter, e.g., /home/linuxbrew/.linuxbrew/bin/python3.13
+# Step 1: Get the Brew-installed python using which.
 BREW_PYTHON=$(which python3)
+
 debug_echo "Brew python3 is: $BREW_PYTHON"
 
-# Step 6: Check if a symlink already exists at the target location.
+if [ -z "$BREW_PYTHON" ]; then
 
-if [ -L "$SYMLINK" ]; then
+  echo "Brew python3 not found! Please ensure it is installed and in your PATH."
+  exit 1
+fi
 
-  CURRENT_TARGET=$(readlink "$SYMLINK")
-  debug_echo "Existing symlink points to: $CURRENT_TARGET"
+# Step 2: Define the desired symlink locations.
+PYTHON3_SYMLINK="/usr/local/bin/python3"
+
+PYTHON_SYMLINK="/usr/local/bin/python"
+debug_echo "Symlink to create for python3: $PYTHON3_SYMLINK"
+debug_echo "Symlink to create for python:  $PYTHON_SYMLINK"
+
+# --- Clean Up Existing Symlinks for python3 ---
+if [ -L "$PYTHON3_SYMLINK" ]; then
+
+  CURRENT_TARGET=$(readlink "$PYTHON3_SYMLINK")
+  debug_echo "Existing python3 symlink points to: $CURRENT_TARGET"
   if [ "$CURRENT_TARGET" = "$BREW_PYTHON" ]; then
-    debug_echo "Symlink is already correct. No action needed."
-    return 0  # Exit the script (or the current sourced block).
+
+    debug_echo "python3 symlink is already correct. No action needed."
   else
-    debug_echo "Symlink target is different. Removing the old symlink..."
-    sudo rm "$SYMLINK"
-    debug_echo "Removed existing symlink: $SYMLINK"
+    debug_echo "python3 symlink target is different. Removing the old symlink..."
+    sudo rm "$PYTHON3_SYMLINK"
+
+    debug_echo "Removed existing python3 symlink: $PYTHON3_SYMLINK"
   fi
 fi
 
-# Step 7: Create a new symlink pointing to Brew's Python.
-if [ -n "$BREW_PYTHON" ]; then
-  sudo ln -sf "$BREW_PYTHON" "$SYMLINK"
-  debug_echo "Created symlink: $SYMLINK -> $BREW_PYTHON"
-else
-  echo "Brew python3 not found!"
+# --- Create or Update the python3 Symlink ---
+sudo ln -sf "$BREW_PYTHON" "$PYTHON3_SYMLINK"
+debug_echo "Created/updated python3 symlink: $PYTHON3_SYMLINK -> $BREW_PYTHON"
+
+# --- Clean Up Existing Symlinks for python ---
+if [ -L "$PYTHON_SYMLINK" ]; then
+  CURRENT_PYTHON_TARGET=$(readlink "$PYTHON_SYMLINK")
+  debug_echo "Existing python symlink points to: $CURRENT_PYTHON_TARGET"
+  if [ "$CURRENT_PYTHON_TARGET" = "$BREW_PYTHON" ]; then
+    debug_echo "python symlink is already correct. No action needed."
+  else
+    debug_echo "python symlink target is different. Removing the old symlink..."
+    sudo rm "$PYTHON_SYMLINK"
+    debug_echo "Removed existing python symlink: $PYTHON_SYMLINK"
+  fi
 fi
 
+# --- Create or Update the python Symlink ---
+sudo ln -sf "$BREW_PYTHON" "$PYTHON_SYMLINK"
+debug_echo "Created/updated python symlink: $PYTHON_SYMLINK -> $BREW_PYTHON"
+
 # --- How to Undo ---
-# To remove this override (i.e. to undo the symlink), simply run:
-#    sudo rm "$SYMLINK"
+# To remove the override for python3, simply run:
+#    sudo rm "$PYTHON3_SYMLINK"
 # This will delete the symlink from /usr/local/bin, so that the system will use the next
-# python3.<version> found in your PATH (typically the apt-installed one).
+# python3 found in your PATH.
+#
+# To also remove the override for python, run:
+#    sudo rm "$PYTHON_SYMLINK"
+# This will delete the symlink from /usr/local/bin, so that the system will use the next
+# python executable found in your PATH.
