@@ -24,7 +24,7 @@ debug_echo() {
 }
 
 # Step 1: Get the Brew-installed python using which.
-BREW_PYTHON=$(which python3)
+BREW_PYTHON=$(echo "$(brew --prefix)/bin/python3")
 
 debug_echo "Brew python3 is: $BREW_PYTHON"
 
