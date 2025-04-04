@@ -1,0 +1,23 @@
+[user]
+	name = Mohamed Yehia
+	email = orzamsok@gmail.com
+[core]
+	editor = nvim
+	autocrlf = input
+	safecrlf = false
+[diff]
+	tool = vscode
+[difftool "vscode"]
+	cmd = "code --wait --diff $LOCAL $REMOTE"
+[merge]
+	ff = no
+	tool = p4merge
+[mergetool]
+	keepBackup = no
+[mergetool "p4merge"]
+	path = "/mnt/c/Program Files/Perforce/p4merge.exe"
+	cmd = "'/mnt/c/Program Files/Perforce/p4merge.exe' $BASE $LOCAL $REMOTE $MERGED"
+[init]
+	defaultBranch = master
+[credential]
+	helper = store
