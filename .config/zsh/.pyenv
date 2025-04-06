@@ -8,7 +8,7 @@
 #    (e.g., run: brew install python).
 # 2. The system's apt-installed Python is not required for this setup.
 #
-# This script will create or update two symlinks in /usr/local/bin:
+# This script will create or update two symlinks in ~/bin:
 #    - "python3"  will point to the Brew-installed Python (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
 #    - "python"   will point to the same Brew-installed Python.
 #
@@ -35,9 +35,9 @@ if [ -z "$BREW_PYTHON" ]; then
 fi
 
 # Step 2: Define the desired symlink locations.
-PYTHON3_SYMLINK="/usr/local/bin/python3"
+PYTHON3_SYMLINK="$HOME/bin/python3"
 
-PYTHON_SYMLINK="/usr/local/bin/python"
+PYTHON_SYMLINK="$HOME/bin/python"
 debug_echo "Symlink to create for python3: $PYTHON3_SYMLINK"
 debug_echo "Symlink to create for python:  $PYTHON_SYMLINK"
 
@@ -51,14 +51,14 @@ if [ -L "$PYTHON3_SYMLINK" ]; then
     debug_echo "python3 symlink is already correct. No action needed."
   else
     debug_echo "python3 symlink target is different. Removing the old symlink..."
-    sudo rm "$PYTHON3_SYMLINK"
+    rm "$PYTHON3_SYMLINK"
 
     debug_echo "Removed existing python3 symlink: $PYTHON3_SYMLINK"
   fi
 fi
 
 # --- Create or Update the python3 Symlink ---
-sudo ln -sf "$BREW_PYTHON" "$PYTHON3_SYMLINK"
+ln -sf "$BREW_PYTHON" "$PYTHON3_SYMLINK"
 debug_echo "Created/updated python3 symlink: $PYTHON3_SYMLINK -> $BREW_PYTHON"
 
 # --- Clean Up Existing Symlinks for python ---
@@ -69,22 +69,22 @@ if [ -L "$PYTHON_SYMLINK" ]; then
     debug_echo "python symlink is already correct. No action needed."
   else
     debug_echo "python symlink target is different. Removing the old symlink..."
-    sudo rm "$PYTHON_SYMLINK"
+    rm "$PYTHON_SYMLINK"
     debug_echo "Removed existing python symlink: $PYTHON_SYMLINK"
   fi
 fi
 
 # --- Create or Update the python Symlink ---
-sudo ln -sf "$BREW_PYTHON" "$PYTHON_SYMLINK"
+ln -sf "$BREW_PYTHON" "$PYTHON_SYMLINK"
 debug_echo "Created/updated python symlink: $PYTHON_SYMLINK -> $BREW_PYTHON"
 
 # --- How to Undo ---
 # To remove the override for python3, simply run:
-#    sudo rm "$PYTHON3_SYMLINK"
-# This will delete the symlink from /usr/local/bin, so that the system will use the next
+#    rm "$PYTHON3_SYMLINK"
+# This will delete the symlink from ~/bin, so that the system will use the next
 # python3 found in your PATH.
 #
 # To also remove the override for python, run:
-#    sudo rm "$PYTHON_SYMLINK"
-# This will delete the symlink from /usr/local/bin, so that the system will use the next
+#    rm "$PYTHON_SYMLINK"
+# This will delete the symlink from ~/bin, so that the system will use the next
 # python executable found in your PATH.
