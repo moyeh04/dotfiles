@@ -17,10 +17,6 @@ source "${ZINIT_HOME}/zinit.zsh"
 #$PATH: -> Latest in order
 export PATH="/usr/local/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:~/bin:$PATH"
 
-# Source the custom Python environment fix script
-if [ -f "$HOME/.config/zsh/.pyenv" ]; then
-    source "$HOME/.config/zsh/.pyenv"
-fi
 
 
 # Add in zsh plugins
@@ -94,3 +90,7 @@ eval "$(zoxide init --cmd cd zsh)"
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.omp.json)"
 source ~/.config/shmux/shmux.sh
 
+# Source the custom Python environment fix script
+if [ -f "$HOME/.config/zsh/.pyenv" ]; then
+   source "$HOME/.config/zsh/.pyenv"
+fi
