@@ -1,18 +1,29 @@
 #!/bin/zsh
 
-
-# --- Dynamic Symlink Setup for Overriding Python with Brew-installed Python ---
-# Prerequisites:
+# --- pythons-are-python3-brew ---
 #
-# 1. Ensure that the Brew-installed Python is installed and in your PATH 
-#    (e.g., run: brew install python).
-# 2. The system's apt-installed Python is not required for this setup.
+# Purpose:
+#   This script creates or updates symlinks in ~/bin so that the "python"
+#   and "python3" commands points
+#   to the Homebrew-installed Python 3 interpreter (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
 #
 # This script will create or update two symlinks in ~/bin:
-#    - "python3"  will point to the Brew-installed Python (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
+#    - "python3"  will point to the Brew-installed Python
+#    (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
 #    - "python"   will point to the same Brew-installed Python.
 #
-# Set DEBUG=1 to enable debug messages; leave it unset or 0 for quiet operation.
+# Background:
+#   Some Neovim plugins—such as overseer.nvim—invoke "python" (instead of "python3") to run
+#   tasks or compilers. On systems where only Python 3 is installed, this may cause failures.
+#   This script "fakes" a Python 2-style executable by making "python" point to Python 3.
+#
+# Usage:
+#   Run the script to force the symlink updates in your user-writable directory (~/bin).
+#
+#   Note: Ensure ~/bin is in your PATH (preferably at the beginning) by setting:
+#         export PATH="$HOME/bin:$PATH"
+#
+# Set DEBUG=1 to enable detailed debug messages; leave it unset or 0 for quiet operation.
 DEBUG=${DEBUG:-0}
 
 # Utility function: only echo if DEBUG is enabled.

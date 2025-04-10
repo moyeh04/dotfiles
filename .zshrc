@@ -91,6 +91,6 @@ eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.omp.json)"
 source ~/.config/shmux/shmux.sh
 
 # Source the custom Python environment fix script
-if [ -f "$HOME/.config/zsh/.pyenv" ]; then
-   source "$HOME/.config/zsh/.pyenv"
+if [ -f "$HOME/.config/scripts/pythons-are-python3-brew" ]; then
+   source "$HOME/.config/scripts/pythons-are-python3-brew"
 fi
