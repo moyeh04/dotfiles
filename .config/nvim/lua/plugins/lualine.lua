@@ -17,7 +17,7 @@ return {
 		}
 
 		local hide_in_width = function()
-			return vim.fn.winwidth(0) > 100
+			return vim.fn.winwidth(0) > 50
 		end
 
 		local diagnostics = {
