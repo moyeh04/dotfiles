@@ -35,7 +35,7 @@ return {
 			diagnostics.checkmake,
 			-- Run pip install mypy first
 			-- diagnostics.mypy, -- Already enabled in lsp.lua
-			formatting.prettier.with({ filetypes = { "html", "json", "yaml", "markdown" } }),
+			formatting.prettier,
 			formatting.stylua,
 			formatting.shfmt.with({ args = { "-i", "4" } }),
 			formatting.terraform_fmt,
