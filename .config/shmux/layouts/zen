@@ -1,0 +1,23 @@
+. "$HOME/.config/shmux/util/functions.sh"
+
+# Set up your project with a root dir, and name
+project_root "$(pwd)"
+session_name "Zenful󰧱"
+
+# first, create your session
+new_session
+
+# then, layout your session
+rename_window ""
+new_window ""
+run_command "nvim"
+new_window ""
+run_command "lg"
+new_window "󰒋"
+new_window ""
+
+# at the end, select the window you want first
+select_window ""
+
+# then, attach to your session!
+attach_to_session

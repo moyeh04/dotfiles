@@ -76,7 +76,7 @@ alias  ts='tmux source ~/.tmux.conf'
 alias  cl='clear'
 alias  cat='bat'
 alias  lg='lazygit'
-alias  shmx='shmux load "ALX_Workflow"'
+alias  zen='~/.config/shmux/layouts/zen'
 alias  up='sudo apt update && sudo apt upgrade -y && brew doctor && brew update && brew upgrade && exec zsh'
 alias  b='betty *'
 alias  p='python3'
@@ -88,7 +88,6 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source <(fzf --zsh)
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.omp.json)"
-source ~/.config/shmux/shmux.sh
 
 # Source the custom Python environment fix script
 if [ -f "$HOME/.config/scripts/pythons-are-python3-brew" ]; then
