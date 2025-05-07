@@ -8,17 +8,26 @@ vim.highlight.priorities.semantic_tokens = 95 -- Or any number lower than 100, t
 vim.diagnostic.config({
 	virtual_text = {
 		prefix = "●",
-		-- Add a custom format function to show error codes
-
 		format = function(diagnostic)
 			local code = diagnostic.code and string.format("[%s]", diagnostic.code) or ""
 			return string.format("%s %s", code, diagnostic.message)
 		end,
 	},
+	signs = true, -- You can simply enable them with 'true' for defaults
+	-- Or, for more control (optional, if you want to customize beyond defaults):
+	-- signs = {
+	--   active = true, -- Redundant if 'signs = true'
+	--   values = {
+	--     { name = "DiagnosticSignError", text = "", texthl = "DiagnosticError" },
+	--     { name = "DiagnosticSignWarn",  text = "", texthl = "DiagnosticWarn" },
+	--     { name = "DiagnosticSignInfo",  text = "", texthl = "DiagnosticInfo" },
+	--     { name = "DiagnosticSignHint",  text = "󰌵", texthl = "DiagnosticHint" },
+	--   }
+	-- },
 	underline = false,
 	update_in_insert = true,
 	float = {
-		source = "if_many", -- Or "if_many"
+		source = "if_many",
 	},
 
 	-- Make diagnostic background transparent

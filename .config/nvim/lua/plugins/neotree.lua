@@ -1,7 +1,6 @@
 return {
 
 	"nvim-neo-tree/neo-tree.nvim",
-	branch = "v3.x",
 	dependencies = {
 
 		"nvim-lua/plenary.nvim",
@@ -11,10 +10,8 @@ return {
 	},
 	config = function()
 		-- If you want icons for diagnostic errors, you'll need to define them somewhere:
-		vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-		vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-		vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-		vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
+		-- The old method of defining diagnostic signs (DiagnosticSignError, etc.) was removed from here.
+		-- Those signs are now globally defined/configured via vim.diagnostic.config() in lua/core/snippets.lua.
 
 		require("neo-tree").setup({
 			close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
