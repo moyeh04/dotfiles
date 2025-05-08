@@ -3,8 +3,8 @@ return {
 	{
 		"L3MON4D3/LuaSnip",
 
-		event = "InsertEnter", -- Or "VeryLazy" if nvim-cmp handles triggering it sufficiently
-		build = "make install_jsregexp", -- From your original config
+		event = { "InsertEnter", "CmdlineEnter" },
+		build = "make install_jsregexp",
 		dependencies = {
 			-- Snippet Collection
 			"rafamadriz/friendly-snippets", -- If you want a good base set of snippets
@@ -18,13 +18,12 @@ return {
 	-- Autocompletion Engine: nvim-cmp
 	{
 		"hrsh7th/nvim-cmp",
-		event = "InsertEnter", -- Load when you enter insert mode
+		event = { "InsertEnter", "CmdlineEnter" },
 		dependencies = {
 			"hrsh7th/cmp-nvim-lsp", -- Source for LSP completions
 			"hrsh7th/cmp-buffer", -- Source for buffer words
 			"hrsh7th/cmp-path", -- Source for file system paths
 			"hrsh7th/cmp-cmdline", -- Source for command-line completion
-
 			"L3MON4D3/LuaSnip", -- Integration with LuaSnip
 			"saadparwaiz1/cmp_luasnip", -- LuaSnip completion source for nvim-cmp
 		},
@@ -101,5 +100,7 @@ return {
 
 	-- This is explicitly listed in your original dependencies,
 	-- though LuaSnip often pulls it in. Listing it ensures it's managed.
-	{ "rafamadriz/friendly-snippets" },
+	{
+		"rafamadriz/friendly-snippets",
+	},
 }
