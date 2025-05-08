@@ -13,13 +13,9 @@ return {
 				make = { "checkmake" },
 				sh = { "shellcheck" },
 				markdown = { "markdownlint-cli2" },
-
 				ruby = { "rubocop" },
-				kotlin = { "ktlint" },
-				terraform = { "tflint" },
 
 				-- Filetypes where LSP will provide diagnostics
-
 				javascript = {}, -- biome
 				typescript = {}, -- biome
 				javascriptreact = {}, -- biome

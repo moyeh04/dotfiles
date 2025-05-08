@@ -34,6 +34,7 @@ return {
 					scss = { "prettierd", "prettier" },
 					json = { "prettierd", "prettier" },
 					yaml = { "prettierd", "prettier" }, -- Or "yamlfix"
+					-- TODO: Install yamlfix manually if Prettier formatting is insufficient
 					graphql = { "prettierd", "prettier" },
 					markdown = { "prettierd", "prettier" },
 					toml = { "taplo" },
@@ -44,12 +45,9 @@ return {
 					dockerfile = { "shfmt" }, -- Or beautysh
 
 					-- Other languages
-					go = { "gofmt" },
+					go = { "goimports-reviser", "golines", "gofmt" },
 					rust = { "rustfmt" },
 					ruby = { "rubocop" },
-					kotlin = { "ktlint" },
-					java = { "google-java-format" },
-					proto = { "buf" },
 				},
 
 				-- Specific formatter configs
@@ -60,12 +58,9 @@ return {
 					ruff = {
 						cmd = "ruff",
 						args = {
-							"check",
-							"--select",
-							"I",
-							"--fix",
+							"format",
 							"--stdin-filename",
-							"%:p",
+							"%",
 							"-",
 						},
 						stdin = true,
