@@ -15,7 +15,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 #:$PATH -> First in order
 #$PATH: -> Latest in order
-export PATH="$HOME/bin:/usr/local/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:$PATH"
 
 
 

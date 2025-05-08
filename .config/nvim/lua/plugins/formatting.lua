@@ -5,7 +5,6 @@ return {
 		cmd = { "ConformInfo" },
 		keys = {
 			{
-
 				"<leader>lf",
 				function()
 					require("conform").format({ async = true, lsp_fallback = true })
@@ -21,7 +20,7 @@ return {
 				-- Map filetypes to formatters
 				formatters_by_ft = {
 					lua = { "stylua" },
-					python = { "ruff_format" },
+					python = { "ruff" },
 
 					-- Web languages - using prettierd w/ prettier fallback
 					javascript = { "prettierd", "prettier" },
@@ -43,7 +42,6 @@ return {
 					sh = { "shfmt" },
 					bash = { "shfmt" }, -- Or beautysh
 					dockerfile = { "shfmt" }, -- Or beautysh
-					terraform = { "terraform_fmt" },
 
 					-- Other languages
 					go = { "gofmt" },
@@ -59,21 +57,21 @@ return {
 					shfmt = {
 						args = { "-i", "4" },
 					},
-					ruff_format = {
+					ruff = {
+						cmd = "ruff",
 						args = {
-							args = {
-								"format",
-								"--line-length",
-								"80",
-								"--stdin-filename",
-								"$FILENAME",
-								"-",
-							},
-							stdin = true,
+							"check",
+							"--select",
+							"I",
+							"--fix",
+							"--stdin-filename",
+							"%:p",
+							"-",
 						},
+						stdin = true,
 					},
 					rubocop = {
-						args = { "--auto-correct", "--format", "quiet", "--stdin", "$FILENAME" },
+						args = { "--auto-correct", "--format", "quiet", "--stdin", "%:p" },
 						stdin = true,
 					},
 				},

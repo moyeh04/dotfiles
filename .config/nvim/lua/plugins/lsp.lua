@@ -200,30 +200,42 @@ return {
 		-- Assumes 'ruff' is in PATH
 		vim.lsp.config("ruff", {
 			capabilities = capabilities,
-			init_options = { settings = { args = { "--line-length=80" } } },
+			init_options = {
+				settings = {
+					args = { "--select=I", "--fix" },
+				},
+			},
 			filetypes = { "python" },
 		})
+		vim.lsp.enable("ruff")
 
 		-- Configure Pylsp (Manually Installed)
 		-- Assumes 'python3 -m pylsp' is runnable
-		vim.lsp.config("pylsp", {
-			capabilities = capabilities,
-			cmd = { "python3", "-m", "pylsp" }, -- Explicit command
+		vim.lsp.config.pylsp = {
+			cmd = { "python3", "-m", "pylsp" },
+			filetypes = { "python" },
 			settings = {
 				pylsp = {
-					plugins = { -- Copied from original config
+					plugins = {
+						jedi = {
+							extra_paths = {
+								"/home/linuxbrew/.linuxbrew/lib/python3.13/site-packages",
+								"/home/linuxbrew/.linuxbrew/Cellar/python@3.13/3.13.3/lib/python3.13/site-packages",
+							},
+						},
 						pyflakes = { enabled = false },
 						pycodestyle = { enabled = false },
 						autopep8 = { enabled = false },
 						yapf = { enabled = false },
 						mccabe = { enabled = false },
-						pylsp_mypy = { enabled = false },
+						pylsp_mypy = { enabled = false }, -- Run pip install pylsp-mypy first.
 						pylsp_black = { enabled = false },
 						pylsp_isort = { enabled = false },
 					},
 				},
 			},
-		})
+		}
+		vim.lsp.enable("pylsp")
 
 		-- Enable the following language servers
 		local servers_configs = {
@@ -255,7 +267,15 @@ return {
 			cssls = {},
 			texlab = {},
 			marksman = {},
-			gopls = { settings = { gopls = { env = { GOEXPERIMENT = "rangefunc" } } } }, -- Keeps your Go settings
+			gopls = {
+				settings = {
+					gopls = {
+						env = {
+							GOEXPERIMENT = "rangefunc",
+						},
+					},
+				},
+			},
 			rust_analyzer = {},
 			biome = {
 				root_dir = require("lspconfig.util").root_pattern("biome.json", "biome.jsonc", "package.json", ".git"),
