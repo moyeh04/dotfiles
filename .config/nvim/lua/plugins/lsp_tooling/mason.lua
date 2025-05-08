@@ -15,19 +15,13 @@ return {
 					},
 				},
 			})
-			-- Trigger event for mason-tool-installer *after* Mason core is setup
-			vim.defer_fn(function()
-				vim.cmd("doautocmd User MasonToolsStarting")
-			end, 100) -- Defer slightly to ensure setup completes
 		end,
 	},
 
 	-- ## Mason Tool Installer ##
 	{
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
-
 		dependencies = { "mason-org/mason.nvim" },
-		event = "User MasonToolsStarting", -- Wait for Mason setup signal
 		config = function()
 			-- Excludes Python LSPs (ruff-lsp, pylsp). Includes Python DAP (debugpy).
 			local ensure_installed_tools = {
@@ -71,7 +65,8 @@ return {
 
 			require("mason-tool-installer").setup({
 				ensure_installed = ensure_installed_tools,
-				run_on_start = true,
+				-- Run MasonToolsInstall manually for better performance
+				run_on_start = false,
 			})
 		end,
 	},
