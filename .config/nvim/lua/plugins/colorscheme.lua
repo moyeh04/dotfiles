@@ -76,7 +76,7 @@ return {
             highlight ErrorMsg guifg=#EE6D85 gui=bold,underline
             highlight WarningMsg guifg=#D7A65F gui=bold
             highlight MoreMsg guifg=#7199EE gui=bold
-            highlight IncSearch guifg=#11121D guibg=#FE6D85
+            highlight IncSearch guifg=#CBCED7 guibg=#212234
 
             highlight Search guifg=#11121D guibg=#98C379
 
