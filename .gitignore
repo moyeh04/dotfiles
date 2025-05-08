@@ -3,3 +3,7 @@
 # and should not be committed to the repository.
 .config/configstore/firebase-tools.json
 .config/configstore/update-notifier-firebase-tools.json
+
+
+# Go telemetry files
+.config/go/telemetry/local
