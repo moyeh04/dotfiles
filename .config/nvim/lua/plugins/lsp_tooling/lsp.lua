@@ -1,7 +1,6 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-
 		"mason-org/mason-lspconfig.nvim",
 		"j-hui/fidget.nvim",
 		"hrsh7th/cmp-nvim-lsp", -- For capabilities
@@ -62,16 +61,35 @@ return {
 				},
 			},
 			gopls = {
-				settings = { gopls = { env = { GOEXPERIMENT = "rangefunc" } } },
-				filetypes = { "go", "gomod", "gowork", "gotmpl" },
+				settings = {
+					gopls = {
+						env = {
+							GOEXPERIMENT = "rangefunc",
+						},
+					},
+				},
+				filetypes = {
+					"go",
+					"gomod",
+					"gowork",
+					"gotmpl",
+				},
 			},
 			rust_analyzer = {},
-			biome = { root_dir = lspconfig_util.root_pattern("biome.json", "biome.jsonc", "package.json", ".git") },
+			biome = {
+				root_dir = lspconfig_util.root_pattern("biome.json", "biome.jsonc", "package.json", ".git"),
+			},
 			bashls = {},
 			dockerls = {},
 			tailwindcss = {},
 			graphql = {},
-			html = { filetypes = { "html", "twig", "hbs" } },
+			html = {
+				filetypes = {
+					"html",
+					"twig",
+					"hbs",
+				},
+			},
 			cssls = {},
 			jsonls = {},
 			yamlls = {},
@@ -106,8 +124,8 @@ return {
 		end
 
 		-- Configure Ruff (Manually Installed)
-		-- Assumes 'ruff' is in PATH
-		vim.lsp.config("ruff", {
+		require("lspconfig").ruff.setup({
+			capabilities = capabilities,
 			init_options = {
 				settings = {
 					args = { "--line-length=80" },
@@ -115,48 +133,43 @@ return {
 			},
 			root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "ruff.toml", "setup.py", ".venv"),
 			filetypes = { "python" },
-			capabilities = capabilities, -- Using the global capabilities from cmp_nvim_lsp
 			commands = {
 				RuffAutofix = {
-					function(client, bufnr)
-						client:exec_cmd({
-
+					function()
+						vim.lsp.buf.execute_command({
 							command = "ruff.applyAutofix",
-							arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
-						}, { bufnr = bufnr })
+							arguments = { { uri = vim.uri_from_bufnr(0) } },
+						})
 					end,
 					description = "Ruff: Fix all auto‑fixable problems",
 				},
-
 				RuffOrganizeImports = {
-					function(client, bufnr)
-						client:exec_cmd({
+					function()
+						vim.lsp.buf.execute_command({
 							command = "ruff.applyOrganizeImports",
-							arguments = { { uri = vim.uri_from_bufnr(bufnr) } },
-						}, { bufnr = bufnr })
+							arguments = { { uri = vim.uri_from_bufnr(0) } },
+						})
 					end,
 					description = "Ruff: Format imports",
 				},
 			},
 		})
-		vim.lsp.enable("ruff")
 
 		-- Configure Pylsp (Manually Installed)
-		-- Assumes 'python3 -m pylsp' is runnable
-		vim.lsp.config.pylsp = {
+		require("lspconfig").pylsp.setup({
 			cmd = { "python3", "-m", "pylsp" },
 			filetypes = { "python" },
-			root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "setup.py", ".venv"), -- From your old config
-			capabilities = capabilities,                                                  -- Using the global capabilities
+			root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "setup.py", ".venv"),
+			capabilities = capabilities,
 			settings = {
 				pylsp = {
 					plugins = {
-						jepyflakes = { enabled = false },
+						pyflakes = { enabled = false },
 						pycodestyle = { enabled = false },
 						autopep8 = { enabled = false },
 						yapf = { enabled = false },
 						mccabe = { enabled = false },
-						pylsp_mypy = { enabled = false }, -- Run pip install pylsp-mypy first.
+						pylsp_mypy = { enabled = false },
 						pylsp_black = { enabled = false },
 						pylsp_isort = { enabled = false },
 						jedi = {
@@ -168,7 +181,6 @@ return {
 					},
 				},
 			},
-		}
-		vim.lsp.enable("pylsp")
+		})
 	end,
 }
