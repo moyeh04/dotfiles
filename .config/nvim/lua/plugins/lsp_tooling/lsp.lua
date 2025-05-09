@@ -96,26 +96,84 @@ return {
 			sqlls = {},
 			marksman = {},
 			puppet = {},
+			ruff = {
+				init_options = {
+					configuration = {
+						line_length = 80,
+					},
+				},
+				root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "ruff.toml", "setup.py", ".venv"),
+				filetypes = { "python" },
+				commands = {
+					RuffAutofix = {
+						function()
+							local bufnr = vim.api.nvim_get_current_buf()
+							local clients = vim.lsp.get_clients({ bufnr = bufnr, name = "ruff" })
+							if clients and #clients > 0 then
+								clients[1]:request("workspace/executeCommand", {
+									command = "ruff.applyAutofix",
+									arguments = { { uri = vim.uri_from_bufnr(bufnr), only = { "source.fixAll" } } },
+								}, nil, bufnr)
+							else
+								print("Ruff LSP client not found for this buffer.")
+							end
+						end,
+						description = "Ruff: Fix all auto‑fixable problems",
+					},
+					RuffOrganizeImports = {
+						function()
+							local bufnr = vim.api.nvim_get_current_buf()
+							local clients = vim.lsp.get_clients({ bufnr = bufnr, name = "ruff" })
+							if clients and #clients > 0 then
+								clients[1]:request("workspace/executeCommand", {
+									command = "ruff.applyOrganizeImports",
+									arguments = {
+										{ uri = vim.uri_from_bufnr(bufnr), only = { "source.organizeImports" } },
+									},
+								}, nil, bufnr)
+							else
+								print("Ruff LSP client not found for this buffer.")
+							end
+						end,
+						description = "Ruff: Format imports",
+					},
+				},
+			},
+			pylsp = {
+				filetypes = { "python" },
+				root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "setup.py", ".venv"),
+				settings = {
+					pylsp = {
+						plugins = {
+							pyflakes = { enabled = false },
+							pycodestyle = { enabled = false },
+							autopep8 = { enabled = false },
+							yapf = { enabled = false },
+							mccabe = { enabled = false },
+							pylsp_mypy = { enabled = false },
+							pylsp_black = { enabled = false },
+							pylsp_isort = { enabled = false },
+							ruff = { enabled = false },
+							jedi = {
+								extra_paths = {
+									"/home/linuxbrew/.linuxbrew/lib/python3.13/site-packages",
+									"/home/linuxbrew/.linuxbrew/Cellar/python@3.13/3.13.3/lib/python3.13/site-packages",
+								},
+							},
+						},
+					},
+				},
+			},
 		}
+		-- config = function()
+		-- ... (your capabilities, LspAttach, servers_configs definitions) ...
 
-		-- ## Setup mason-lspconfig Bridge ##
-		-- This list tells mason-lspconfig which LSPs (by lspconfig name) to
-		-- ensure are installed via Mason and to provide default setups for.
-		local lsp_names_for_mason_bridge = {}
-		for server_name, _ in pairs(servers_configs) do
-			table.insert(lsp_names_for_mason_bridge, server_name)
-		end
-		-- If there are any other LSPs installed by mason.lua that you want default setup for
-		-- but don't have custom configs in servers_configs, add their lspconfig names here.
-		-- Example: if "marksman" was installed by mason.lua but not in servers_configs:
-		-- if not servers_configs["marksman"] then table.insert(lsp_names_for_mason_bridge, "marksman") end
-		-- However, since all our Mason LSPs are now keys in servers_configs, this is simpler.
+		-- CURRENT LSP SETUP METHOD: Explicitly configure each server from `servers_configs`
+		-- This loop ensures that each LSP server defined in `servers_configs`
+		-- is initialized with its specific custom settings and global capabilities.
+		-- Mason (via mason-tool-installer.nvim) is responsible for ensuring the
+		-- LSP server binaries are installed and available in the PATH.
 
-		require("mason-lspconfig").setup({
-			ensure_installed = lsp_names_for_mason_bridge,
-		})
-
-		-- Apply custom configurations from servers_configs
 		for server_name, custom_config in pairs(servers_configs) do
 			local server_opts = vim.tbl_deep_extend("force", {
 				capabilities = capabilities, -- Apply base capabilities
@@ -123,64 +181,34 @@ return {
 			require("lspconfig")[server_name].setup(server_opts)
 		end
 
-		-- Configure Ruff (Manually Installed)
-		require("lspconfig").ruff.setup({
-			capabilities = capabilities,
-			init_options = {
-				settings = {
-					args = { "--line-length=80" },
-				},
-			},
-			root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "ruff.toml", "setup.py", ".venv"),
-			filetypes = { "python" },
-			commands = {
-				RuffAutofix = {
-					function()
-						vim.lsp.buf.execute_command({
-							command = "ruff.applyAutofix",
-							arguments = { { uri = vim.uri_from_bufnr(0) } },
-						})
-					end,
-					description = "Ruff: Fix all auto‑fixable problems",
-				},
-				RuffOrganizeImports = {
-					function()
-						vim.lsp.buf.execute_command({
-							command = "ruff.applyOrganizeImports",
-							arguments = { { uri = vim.uri_from_bufnr(0) } },
-						})
-					end,
-					description = "Ruff: Format imports",
-				},
-			},
-		})
+		-- -----------------------------------------------------------------------------
+		-- ALTERNATIVE LSP SETUP APPROACH (CURRENTLY DISABLED)
+		-- -----------------------------------------------------------------------------
+		-- The following section outlines a method using `mason-lspconfig.nvim` to
+		-- automatically handle the setup of LSP servers based on the `servers_configs` table.
+		--
+		-- This approach was disabled because the current method (an explicit loop, see below)
+		-- provides more direct control and resolved issues with duplicate client initializations
+		-- or settings not being applied as expected.
+		--
+		-- If re-evaluating this `mason-lspconfig.setup` with handlers in the future,
 
-		-- Configure Pylsp (Manually Installed)
-		require("lspconfig").pylsp.setup({
-			cmd = { "python3", "-m", "pylsp" },
-			filetypes = { "python" },
-			root_dir = lspconfig_util.root_pattern(".git", "pyproject.toml", "setup.py", ".venv"),
-			capabilities = capabilities,
-			settings = {
-				pylsp = {
-					plugins = {
-						pyflakes = { enabled = false },
-						pycodestyle = { enabled = false },
-						autopep8 = { enabled = false },
-						yapf = { enabled = false },
-						mccabe = { enabled = false },
-						pylsp_mypy = { enabled = false },
-						pylsp_black = { enabled = false },
-						pylsp_isort = { enabled = false },
-						jedi = {
-							extra_paths = {
-								"/home/linuxbrew/.linuxbrew/lib/python3.13/site-packages",
-								"/home/linuxbrew/.linuxbrew/Cellar/python@3.13/3.13.3/lib/python3.13/site-packages",
-							},
-						},
-					},
-				},
-			},
-		})
+		-- ensure the explicit setup loop further down is removed to prevent conflicts.
+		-- -----------------------------------------------------------------------------
+		-- -- local lsp_names_for_mason_bridge = {}
+		-- -- for server_name, _ in pairs(servers_configs) do
+		-- --     table.insert(lsp_names_for_mason_bridge, server_name)
+		-- -- end
+		--
+		-- -- require("mason-lspconfig").setup({
+		-- --     ensure_installed = lsp_names_for_mason_bridge,
+		-- --     -- To use this effectively without a manual loop following it,
+		-- --     -- a `handlers` table would typically be provided here to call
+		-- --     -- lspconfig[server_name].setup() with the custom configurations
+
+		-- --     -- from the `servers_configs` table.
+		-- -- })
+		-- -----------------------------------------------------------------------------
+		-- end, -- End of your main config function
 	end,
 }

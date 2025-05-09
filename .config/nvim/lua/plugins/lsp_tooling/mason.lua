@@ -14,6 +14,7 @@ return {
 						package_uninstalled = "✗",
 					},
 				},
+				log_level = vim.log.levels.DEBUG,
 			})
 		end,
 	},
@@ -57,6 +58,8 @@ return {
 				"sqlls",
 				"marksman",
 				"puppet-editor-services",
+				"ruff",
+				"pylsp",
 
 				-- DAP Servers:
 				"delve", -- Go
