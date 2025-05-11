@@ -1,16 +1,21 @@
-;; Caps to escape/control configuration for Kanata
+ ;; Tell Kanata which raw keys you’ll use in your mappings
+ ;; Add keys physical keys you want Kanata to intercept and remap
+ (defsrc
+   caps    ;; Caps-Lock key
+   lctl    ;; Left-Control
+   rctl    ;; Right-Control
+ )
 
-(defsrc
-  caps
-  lctrl  ;; Add lctrl to the defsrc
-)
+ ;; Build reusable “tap vs hold” behaviors
+ (defalias
+   escctl    (tap-hold 100 100 esc lctl)                         ;; tap → Esc,           hold → LCtrl
+   lctlcaps  (tap-hold 250 250 caps lctl)                        ;; tap → Caps,          hold → LCtrl
+   rctrllang (tap-hold 200 200 (multi lalt lsft) rctl)           ;; tap → (Alt + Shift), hold → RCtrl
+ )
 
-(defalias
-  escctrl (tap-hold 100 100 esc lctl)
-  lctrlcaps (tap-hold 250 250 caps lctrl)
-)
-
-(deflayer base
-  @escctrl
-  @lctrlcaps  ;; Add the lctrlcaps alias to the base layer
-)
+ ;; Define your “base” layer and slot in those aliases
+ (deflayer base
+   @escctl      ;; CapsLock → Esc            / LCtrl
+   @lctlcaps    ;; LCtrl    → Caps           / LCtrl
+   @rctrllang   ;; RCtrl    → (Alt + Shift)  / RCtrl
+ )
