@@ -20,7 +20,7 @@ return {
 				-- Map filetypes to formatters
 				formatters_by_ft = {
 					lua = { "stylua" },
-					python = { "ruff" },
+					python = { "ruff_format", "ruff_organize_imports" },
 
 					-- Web languages - using prettierd w/ prettier fallback
 					javascript = { "prettierd", "prettier" },
@@ -55,10 +55,28 @@ return {
 					shfmt = {
 						args = { "-i", "4" },
 					},
-					ruff = {
+					ruff_format = {
 						cmd = "ruff",
 						args = {
 							"format",
+							"--line-length",
+							"80",
+							"--stdin-filename",
+							"%",
+							"-",
+						},
+						stdin = true,
+					},
+					ruff_organize_imports = {
+						cmd = "ruff",
+						args = {
+							"check",
+							"--select",
+							"I",
+							"--fix",
+							"--exit-zero",
+							"force-exclude",
+							"no-cache",
 							"--stdin-filename",
 							"%",
 							"-",
