@@ -11,7 +11,13 @@ return {
 				themable = true, -- allows highlight groups to be overriden i.e. sets highlights as default
 				numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
 				close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
-
+				offsets = {
+					{
+						filetype = "neo-tree",
+						separator = true,
+						text_align = "left",
+					},
+				},
 				buffer_close_icon = "✗",
 				close_icon = "✗",
 				path_components = 1, -- Show only the file name without the directory
