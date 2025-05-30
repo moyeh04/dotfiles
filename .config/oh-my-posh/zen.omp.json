@@ -1,36 +1,36 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "palette": {
-    "black": "#111111",
-    "blue": "#4277a0",
-    "bright_red": "#ff0000",
-    "coral_red": "#BD2031",
-    "dark_green": "#3DAC78",
-    "dark_orange": "#FF4500",
-    "electric_purple": "#A200FF",
-    "fern": "#30502f",
-    "green": "#0B6E4F",
-    "light_green": "#81ff91",
-    "medium_green": "#4CAF50",
-    "muted_gold": "#E1B12C",
-    "pale_yellow": "#FFD966",
-    "slate_blue": "#3E667A",
-    "teal": "#008080",
-    "white": "#efeef4",
-    "yellow_green": "#9ACD32"
+    "arc_black": "#111422",
+    "arc_bg_segment": "#15192b",
+    "arc_bg_git_exec": "#181c30",
+    "arc_white": "#bcc1dc",
+    "arc_bright_white": "#ffffff",
+    "arc_primary_accent": "#8eb0e6",
+    "arc_slate_blue": "#333c66",
+    "arc_blue": "#69C3FF",
+    "arc_bright_red": "#ff4319",
+    "arc_red": "#E35535",
+    "arc_green": "#3CEC85",
+    "arc_light_green": "#A4EF58",
+    "arc_orange": "#FF955C",
+    "arc_bright_orange": "#FF8800",
+    "arc_purple": "#B78AFF",
+    "arc_pink": "#F38CEC",
+    "arc_yellow": "#EACD61",
+    "arc_bright_yellow": "#ffd94c",
+    "arc_turquoize": "#22ECDB"
   },
   "secondary_prompt": {
     "template": "❯❯ ",
-    "foreground": "p:light_green",
+    "foreground": "p:arc_purple",
     "background": "transparent"
   },
   "transient_prompt": {
     "template": "\ueab6\ue285 ",
-    "foreground": "#81ff91",
+    "foreground": "p:arc_turquoize",
     "background": "transparent",
-    "foreground_templates": [
-      "{{if gt .Code 0}}p:coral_red{{end}}"
-    ]
+    "foreground_templates": ["{{if gt .Code 0}}p:arc_red{{end}}"]
   },
   "console_title_template": "{{if .Root}}[root] {{end}}{{.Shell}} in <{{.Folder}}>",
   "blocks": [
@@ -47,43 +47,38 @@
           "style": "diamond",
           "leading_diamond": "\u256d\u2500\ue0b6",
           "template": "\ue5ff {{ .Path }} ",
-          "foreground": "p:white",
-          "background": "p:green",
+          "foreground": "p:arc_blue",
+          "background": "p:arc_bg_segment",
           "type": "path"
         },
         {
           "properties": {
-            "branch_icon": "\ue725 ",
+            "branch_icon": " \ue725 ",
             "commit_icon": "\uf417 ",
             "fetch_stash_count": true,
             "fetch_status": true,
             "fetch_upstream_icon": true
           },
           "style": "powerline",
-          "template": " {{.UpstreamIcon }}{{.HEAD }}{{ if .Working.Changed }}<p:pale_yellow> \uf044 {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<p:yellow_green> \uf046 {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }}",
-          "foreground": "p:white",
           "powerline_symbol": "\ue0b0",
-          "background": "p:medium_green",
+          "background": "p:arc_bg_git_exec",
+          "foreground": "p:arc_bright_white",
           "type": "git",
-          "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:slate_blue{{ end }}",
-            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:coral_red{{ end }}",
-            "{{ if gt .Ahead 0 }}p:dark_orange{{end}}",
-            "{{ if gt .Behind 0 }}p:electric_purple{{end}}"
-          ]
+          "template": " {{.UpstreamIcon }}{{.HEAD }}{{ if .Working.Changed }} <p:arc_bright_yellow>\uf044 {{ .Working.String }}</>{{ end }}{{ if .Staging.Changed }} <p:arc_light_green>\uf046 {{ .Staging.String }}</>{{ end }}{{ if gt .Ahead 0 }} <p:arc_bright_orange>↑{{.Ahead}}</>{{ end }}{{ if gt .Behind 0 }} <p:arc_blue>↓{{.Behind}}</>{{ end }}{{ if gt .StashCount 0 }} <p:arc_pink>\ueb4b {{ .StashCount }}</>{{ end }}"
         },
         {
           "properties": {
             "always_enabled": true
           },
           "style": "powerline",
-          "template": " {{ if gt .Code 0 }}\uf00d{{end}}{{ if eq .Code 0 }}\uf00c{{ end }}",
-          "foreground": "p:white",
+          "template": " {{ if gt .Code 0 }}\uf00d{{else}}\uf00c{{ end }} ",
           "powerline_symbol": "\ue0b4",
-          "background": "p:dark_green",
           "type": "status",
+          "foreground_templates": [
+            "{{if gt .Code 0}}p:arc_red{{else}}p:arc_green{{end}}"
+          ],
           "background_templates": [
-            "{{ if gt .Code 0 }}p:coral_red{{ end }}"
+            "{{if gt .Code 0}}p:arc_bg_segment{{else}}p:arc_bg_segment{{end}}"
           ]
         }
       ],
@@ -101,9 +96,9 @@
           "style": "diamond",
           "leading_diamond": "\ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "<#33395b,transparent></>\udb80\udd09 {{.FormattedMs}}<transparent,#33395b></>",
-          "foreground": "p:white",
-          "background": "#33395b",
+          "template": "<p:arc_bg_git_exec,transparent></>\udb80\udd09 {{.FormattedMs}}<transparent,p:arc_bg_git_exec></>",
+          "foreground": "p:arc_bright_white",
+          "background": "p:arc_bg_git_exec",
           "type": "executiontime"
         },
         {
@@ -114,8 +109,8 @@
           "leading_diamond": "\ue0b6",
           "trailing_diamond": "\ue0b4",
           "template": "{{.CurrentDate | date .Format}} \ueb7c",
-          "foreground": "p:white",
-          "background": "p:teal",
+          "foreground": "p:arc_green",
+          "background": "p:arc_bg_segment",
           "type": "time"
         }
       ]
@@ -127,18 +122,19 @@
         {
           "style": "plain",
           "template": "\u2570\u2500",
-          "foreground": "p:electric_purple",
-          "background": "",
-          "type": "text"
+          "background": "transparent",
+          "type": "text",
+          "foreground_templates": [
+            "{{if gt .Code 0}}p:arc_red{{else}}p:arc_slate_blue{{end}}"
+          ]
         },
         {
           "style": "plain",
           "template": "\ue285\ueab6",
-          "foreground": "#F5BDE6",
           "background": "transparent",
           "type": "text",
           "foreground_templates": [
-            "{{ if gt .Code 0 }}#ef5350{{ end }}"
+            "{{if gt .Code 0}}p:arc_red{{else}}p:arc_blue{{end}}"
           ]
         }
       ],
