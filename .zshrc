@@ -13,11 +13,17 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-#:$PATH -> First in order
-#$PATH: -> Latest in order
+# :$PATH -> First in order
+# $PATH: -> Latest in order
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:$PATH"
+export GDK_BACKEND=x11
 
-
+# PostgreSQL Config
+export PATH="/home/linuxbrew/.linuxbrew/opt/postgresql@18/bin:$PATH"
+export LDFLAGS="-L/home/linuxbrew/.linuxbrew/opt/postgresql@18/lib"
+export CPPFLAGS="-I/home/linuxbrew/.linuxbrew/opt/postgresql@18/include"
+export PGHOST=localhost
+export PGDATABASE=postgres
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -29,6 +35,9 @@ zinit light Aloxaf/fzf-tab
 # Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::command-not-found
+
+# Completion Paths
+fpath+=("$HOME/.zsh/completions")  # Custom Completions
 
 # Load completions
 autoload -U compinit && compinit
@@ -77,10 +86,11 @@ alias  cl='clear'
 alias  cat='bat'
 alias  lg='lazygit'
 alias  zen='~/.config/shmux/layouts/zen'
-alias  up='sudo apt update && sudo apt upgrade -y && brew doctor && brew update && brew upgrade && exec zsh'
+alias  up='sudo apt update && sudo apt upgrade -y &&  brew update && brew upgrade && brew cleanup && exec zsh'
 alias  b='betty *'
 alias  p='python3'
 alias  pip='pip3'
+alias  netstat='ss'
 
 # Shell Integrations
 # Ensure Homebrew is prioritized in the PATH and load shell integrations.
@@ -93,3 +103,6 @@ eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.omp.json)"
 if [ -f "$HOME/.config/scripts/pythons-are-python3-brew" ]; then
    source "$HOME/.config/scripts/pythons-are-python3-brew"
 fi
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
