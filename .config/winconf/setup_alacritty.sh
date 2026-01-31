@@ -269,8 +269,7 @@ catch {
 }
 
 Write-Host ""
-Write-Host "Press any key to close this window..." -ForegroundColor Yellow
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+Read-Host "Press Enter to close"
 EOF
 
 WIN_PS_SCRIPT=$(wslpath -w "${ps_script}")
