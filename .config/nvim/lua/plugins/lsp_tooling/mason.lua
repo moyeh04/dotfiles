@@ -62,9 +62,15 @@ return {
 				"ruff",
 				"pylsp",
 
+				-- Java Tools:
+				"google-java-format", -- Formatter
+				"checkstyle", -- Linter (Javadoc, naming conventions)
+
 				-- DAP Servers:
 				"delve", -- Go
 				"debugpy", -- Python
+				"java-debug-adapter", -- Java
+				"java-test", -- Java test runner
 			}
 
 			require("mason-tool-installer").setup({

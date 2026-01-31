@@ -51,6 +51,7 @@ return {
 					go = { "goimports-reviser", "golines", "gofmt" },
 					rust = { "rustfmt" },
 					ruby = { "rubocop" },
+					java = { "google-java-format" },
 				},
 
 				-- Specific formatter configs

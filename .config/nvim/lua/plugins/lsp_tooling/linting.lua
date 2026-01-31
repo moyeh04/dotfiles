@@ -13,6 +13,7 @@ return {
 				make = { "checkmake" },
 				sh = { "shellcheck" },
 				ruby = { "rubocop" },
+				java = { "checkstyle" }, -- Javadoc & naming conventions (betty-doc equivalent)
 
 				-- Filetypes where LSP will provide diagnostics
 				javascript = {}, -- biome
@@ -27,7 +28,6 @@ return {
 				go = {}, -- gopls
 				rust = {}, -- rust-analyzer
 				lua = {}, -- lua_ls
-				java = {}, -- jdtls
 				yaml = {}, -- yamlls
 				html = {}, -- html-lsp
 				css = {}, -- cssls
