@@ -93,7 +93,14 @@ return {
 					{ name = "nvim_lsp" }, -- Language server suggestions
 					{ name = "luasnip" }, -- Snippet suggestions
 					{ name = "buffer" }, -- Suggestions from current buffer text
-					{ name = "path" }, -- File path suggestions
+					{
+						name = "path",
+						option = {
+							get_cwd = function()
+								return vim.fn.expand("%:p:h")
+							end,
+						},
+					}, -- File path suggestions
 
 					-- { name = "lazydev", group_index = 0 }, -- For Neovim plugin development with lazy.nvim
 				}),
@@ -104,19 +111,14 @@ return {
 					-- Select next item in completion menu
 					["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 					-- Confirm selected completion
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
+					["<C-y>"] = cmp.mapping.confirm({ select = true }),
 					-- Manually trigger completion
-
 					["<C-Space>"] = cmp.mapping.complete(),
-
 					-- Scroll documentation window backwards
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					-- Scroll documentation window forwards
-
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
-
 					-- Snippet navigation: Jump forward or expand snippet
-
 					["<C-l>"] = cmp.mapping(function(fallback)
 						if luasnip.expand_or_locally_jumpable() then
 							luasnip.expand_or_jump()
