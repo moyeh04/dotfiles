@@ -22,6 +22,9 @@ return {
 					lua = { "stylua" },
 					python = { "ruff_format", "ruff_organize_imports" },
 
+					--C Languages
+					cpp = { "clang-format" },
+
 					-- Web languages - using prettierd w/ prettier fallback
 					javascript = { "prettierd", "prettier" },
 					typescript = { "prettierd", "prettier" },
@@ -59,8 +62,6 @@ return {
 						cmd = "ruff",
 						args = {
 							"format",
-							"--line-length",
-							"80",
 							"--stdin-filename",
 							"%",
 							"-",
@@ -86,6 +87,28 @@ return {
 					rubocop = {
 						args = { "--auto-correct", "--format", "quiet", "--stdin", "%:p" },
 						stdin = true,
+					},
+					["clang-format"] = {
+						prepend_args = function(self, ctx)
+							-- Check if .clang-format exists in project
+							local config_file = vim.fs.find(".clang-format", {
+
+								upward = true,
+								path = ctx.dirname,
+							})[1]
+
+							if config_file then
+								-- Use project's .clang-format file
+								return { "--style=file" }
+							else
+								-- Fallback to Betty style
+								return {
+									"--style={BasedOnStyle: LLVM, IndentWidth: 4, AccessModifierOffset: -4, UseTab: Never, ColumnLimit: 80, BreakBeforeBraces: Attach, AllowShortFunctionsOnASingleLine: Empty, IndentAccessModifiers: false}",
+								}
+							end
+						end,
+
+						args = { "--assume-filename", "$FILENAME" },
 					},
 				},
 

@@ -48,6 +48,7 @@ return {
 				"rust-analyzer",
 				"biome",
 				"bash-language-server",
+				"clangd",
 				"dockerfile-language-server",
 				"tailwindcss-language-server",
 				"graphql-language-service-cli",

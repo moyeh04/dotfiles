@@ -94,7 +94,6 @@ return {
 			jsonls = {},
 			yamlls = {},
 			sqlls = {},
-			marksman = {},
 			puppet = {},
 			ruff = {
 				init_options = {
@@ -164,6 +163,23 @@ return {
 					},
 				},
 			},
+			clangd = {
+				-- cmd = {
+				-- 	"clangd",
+				-- 	"--background-index",
+				-- 	"--clang-tidy",
+				-- 	"--header-insertion=iwyu",
+				-- 	"--completion-style=detailed",
+				-- 	"--function-arg-placeholders",
+				-- },
+				filetypes = { "cpp", "objc", "objcpp", "cuda", "proto" },
+				init_options = {
+					usePlaceholders = true,
+					completeUnimported = true,
+					clangdFileStatus = true,
+					fallbackFlags = { "--std=c++20" },
+				},
+			},
 		}
 		-- config = function()
 		-- ... (your capabilities, LspAttach, servers_configs definitions) ...
@@ -178,7 +194,8 @@ return {
 			local server_opts = vim.tbl_deep_extend("force", {
 				capabilities = capabilities, -- Apply base capabilities
 			}, custom_config or {}) -- Ensure custom_config is a table
-			require("lspconfig")[server_name].setup(server_opts)
+			vim.lsp.config(server_name, server_opts)
+			vim.lsp.enable(server_name)
 		end
 
 		-- -----------------------------------------------------------------------------
