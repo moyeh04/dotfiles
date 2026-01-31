@@ -3,7 +3,6 @@
 vim.cmd("set tabstop=4")
 vim.cmd("set softtabstop=4")
 vim.cmd("set shiftwidth=4")
-vim.cmd("set textwidth=80")
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.cindent = true
@@ -14,7 +13,10 @@ vim.opt.cursorline = true
 vim.cmd("set rnu")
 vim.cmd("set nu")
 
---Set FileFormat
+-- Treat underscore as part of a word(w) not WORD(W)
+vim.cmd("set iskeyword-=_")
+
+--Set FileFormat to Unix‐style line endings
 vim.cmd("set fileformat=unix")
 
 -- Vim Backups
