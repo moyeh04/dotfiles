@@ -12,7 +12,6 @@ return {
 				-- Linters handled directly by nvim-lint
 				make = { "checkmake" },
 				sh = { "shellcheck" },
-				markdown = { "markdownlint-cli2" },
 				ruby = { "rubocop" },
 
 				-- Filetypes where LSP will provide diagnostics
