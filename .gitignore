@@ -7,3 +7,6 @@
 
 # Go telemetry files
 .config/go/telemetry/local
+
+# Neovim lazy.nvim lock file (changes too frequently)
+.config/nvim/lazy-lock.json
