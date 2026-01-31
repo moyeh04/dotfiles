@@ -1,0 +1,134 @@
+# ============================================================================
+# SQLFluff Configuration - Ultimate SQL Formatting & Linting
+# ============================================================================
+
+[sqlfluff]
+# Database dialect (mysql, postgres, sqlite, etc.)
+dialect = mysql
+
+# Max characters per line (120 is modern, 80 is traditional)
+max_line_length = 120
+
+# Exclude specific rules if needed (comma-separated)
+exclude_rules = 
+
+# ============================================================================
+# INDENTATION & SPACING
+# ============================================================================
+
+[sqlfluff:indentation]
+# Use spaces (not tabs) for consistency across editors
+indent_unit = space
+
+# Number of spaces per indentation level
+tab_space_size = 4
+
+# Indent contents of code blocks (BEGIN/END)
+allow_implicit_indents = true
+
+# ============================================================================
+# CAPITALIZATION RULES
+# ============================================================================
+
+# Keywords: SELECT, FROM, WHERE, JOIN, etc. → UPPERCASE
+[sqlfluff:rules:capitalisation.keywords]
+
+capitalisation_policy = upper
+
+# Identifiers: table_name, column_name → lowercase
+[sqlfluff:rules:capitalisation.identifiers]
+capitalisation_policy = lower
+
+# Functions: COUNT, SUM, AVG, MAX → UPPERCASE
+[sqlfluff:rules:capitalisation.functions]
+capitalisation_policy = upper
+
+# Data types: INT, VARCHAR, TIMESTAMP → UPPERCASE
+[sqlfluff:rules:capitalisation.types]
+capitalisation_policy = upper
+
+# Literals: TRUE, FALSE, NULL → UPPERCASE
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = upper
+
+# ============================================================================
+# OPERATORS & CONVENTIONS
+# ============================================================================
+
+# Use != instead of <> for "not equal"
+[sqlfluff:rules:convention.not_equal]
+preferred_not_equal_style = c_style
+
+# Prefer COALESCE over IFNULL/NVL
+[sqlfluff:rules:convention.coalesce]
+prefer_over_ifnull = true
+
+# ============================================================================
+# LAYOUT & FORMATTING
+# ============================================================================
+
+
+# Collapse extra blank lines
+[sqlfluff:rules:layout.newlines]
+maximum_empty_lines_between_statements = 1
+maximum_empty_lines_inside_statements = 0
+
+# Commas: trailing (a, b, c) not leading (, a, b, c)
+[sqlfluff:layout:type:comma]
+line_position = trailing
+
+# Each SELECT column on its own line
+[sqlfluff:layout:type:select_clause_element]
+line_position = alone
+
+# Each WHERE condition on its own line (for complex queries)
+
+[sqlfluff:layout:type:where_clause_element]
+line_position = alone
+
+# Binary operators (+, -, *, /) have spaces around them
+[sqlfluff:rules:layout.spacing]
+surrounding_whitespace = 1
+
+# ============================================================================
+# ALIASING
+# ============================================================================
+
+# Table aliases must be explicit (FROM users u), not implicit
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+# Column aliases use AS keyword: SELECT name AS user_name
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+# Alias length: prefer short but meaningful (u for users, p for posts)
+[sqlfluff:rules:aliasing.length]
+min_alias_length = 1
+max_alias_length = 3
+
+# ============================================================================
+# READABILITY
+# ============================================================================
+
+# Consistent quote style for identifiers
+[sqlfluff:rules:convention.quoted_literals]
+preferred_quoted_literal_style = single_quotes
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# To use with DBeaver:
+#   Command: wsl -e /home/linuxbrew/.linuxbrew/bin/sqlfluff fix - --dialect mysql
+
+#
+# To test this config:
+#   echo "select name,email from users where id=1" | sqlfluff fix - --dialect mysql
+#
+
+# To see all violations without fixing:
+#   sqlfluff lint myquery.sql
+#
+# To auto-fix all issues:
+#   sqlfluff fix myquery.sql
+# ============================================================================
