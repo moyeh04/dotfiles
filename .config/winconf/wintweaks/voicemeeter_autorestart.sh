@@ -76,19 +76,35 @@ enable_autorestart() {
     "${PWSH_EXE}" -Command "Start-Process pwsh.exe -Verb RunAs -ArgumentList '-NoProfile -Command', {
         \$taskName = 'Voicemeeter Auto Restart'
         
-        # Detect Voicemeeter installation (do it in PowerShell, not bash)
-        \$vmPaths = @(
-            'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter.exe',
-            'C:\Program Files (x86)\VB\Voicemeeter\voicemeeterpro.exe',
-            'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter8.exe',
-            'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter8x64.exe'
-        )
+        # Detect which Voicemeeter is RUNNING (best method)
+        Write-Host '[INFO] Detecting running Voicemeeter process...' -ForegroundColor Yellow
+        \$vmProcess = Get-Process -Name 'voicemeeter*' -ErrorAction SilentlyContinue | Where-Object { 
+            \$_.ProcessName -eq 'voicemeeter' -or 
+            \$_.ProcessName -eq 'voicemeeterpro' -or 
+            \$_.ProcessName -eq 'voicemeeter8' -or
+            \$_.ProcessName -eq 'voicemeeter8x64'
+        } | Select-Object -First 1
         
         \$vmPath = \$null
-        foreach (\$path in \$vmPaths) {
-            if (Test-Path \$path) {
-                \$vmPath = \$path
-                break
+        if (\$vmProcess) {
+            \$vmPath = \$vmProcess.Path
+            Write-Host '[INFO] Path:' \$vmPath -ForegroundColor Cyan
+        } else {
+            Write-Host '[WARNING] Voicemeeter not running, checking installed files...' -ForegroundColor Yellow
+
+            # Fallback: check which files exist (prefer Pro/Potato over basic)
+            \$vmPaths = @(
+                'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter8x64.exe',
+                'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter8.exe',
+                'C:\Program Files (x86)\VB\Voicemeeter\voicemeeterpro.exe',
+                'C:\Program Files (x86)\VB\Voicemeeter\voicemeeter.exe'
+            )
+            
+            foreach (\$path in \$vmPaths) {
+                if (Test-Path \$path) {
+                    \$vmPath = \$path
+                    break
+                }
             }
         }
         
