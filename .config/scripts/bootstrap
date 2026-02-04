@@ -1,0 +1,32 @@
+#!/bin/zsh
+# --- bootstrap ---
+#
+# Main orchestrator for shell environment setup.
+# Sources common utilities and runs all setup scripts.
+#
+# Usage:
+#   Sourced automatically in .zshrc on shell startup.
+#
+# Debug mode:
+#   DEBUG=1 source ~/.config/scripts/bootstrap
+
+SCRIPTS_DIR="${HOME}/.config/scripts"
+
+# Source common utilities
+if [ -f "$SCRIPTS_DIR/lib/common" ]; then
+  source "$SCRIPTS_DIR/lib/common"
+else
+  echo "ERROR: Common utilities not found at $SCRIPTS_DIR/lib/common" >&2
+  return 1
+fi
+
+# Ensure ~/bin exists (used by multiple setup scripts)
+ensure_dir "$HOME/bin"
+
+# Run all setup scripts
+for script in "$SCRIPTS_DIR/setup/"*; do
+  if [ -f "$script" ]; then
+    debug_echo "Running setup script: $script"
+    source "$script"
+  fi
+done

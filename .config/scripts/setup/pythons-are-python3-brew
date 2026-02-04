@@ -1,0 +1,52 @@
+#!/bin/zsh
+# --- pythons-are-python3-brew ---
+#
+# Purpose:
+#   This script creates or updates symlinks in ~/bin so that the "python"
+#   and "python3" commands point to the Homebrew-installed Python 3 interpreter
+#   (e.g., /home/linuxbrew/.linuxbrew/bin/python3).
+#
+# This script will create or update two symlinks in ~/bin:
+#    - "python3"  will point to the Brew-installed Python
+#    - "python"   will point to the same Brew-installed Python
+#
+# Background:
+#   Some Neovim plugins—such as overseer.nvim—invoke "python" (instead of "python3")
+#   to run tasks or compilers. On systems where only Python 3 is installed, this may
+#   cause failures. This script "fakes" a Python 2-style executable by making "python"
+#   point to Python 3.
+#
+# Usage:
+#   Sourced automatically by bootstrap on shell startup.
+#   Uses ensure_symlink from lib/common for idempotent symlink creation.
+#
+# How to Undo:
+#   To remove the override for python3, run:
+#      rm ~/bin/python3
+#   This will delete the symlink from ~/bin, so that the system will use the next
+#   python3 found in your PATH.
+#
+#   To also remove the override for python, run:
+#      rm ~/bin/python
+#   This will delete the symlink from ~/bin, so that the system will use the next
+#   python executable found in your PATH.
+
+# Get the Brew-installed python
+BREW_PYTHON="$(brew --prefix)/bin/python3"
+debug_echo "Brew python3 is: $BREW_PYTHON"
+
+if [ -z "$BREW_PYTHON" ] || [ ! -f "$BREW_PYTHON" ]; then
+  debug_echo "Brew python3 not found! Skipping symlink creation."
+  return 0
+fi
+
+# Define symlink locations
+PYTHON3_SYMLINK="$HOME/bin/python3"
+PYTHON_SYMLINK="$HOME/bin/python"
+
+debug_echo "Symlink to create for python3: $PYTHON3_SYMLINK"
+debug_echo "Symlink to create for python:  $PYTHON_SYMLINK"
+
+# Create or update symlinks using common utility
+ensure_symlink "$PYTHON3_SYMLINK" "$BREW_PYTHON" "python3"
+ensure_symlink "$PYTHON_SYMLINK" "$BREW_PYTHON" "python"

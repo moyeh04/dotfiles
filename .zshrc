@@ -99,9 +99,9 @@ source <(fzf --zsh)
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh/zen.omp.json)"
 
-# Source the custom Python environment fix script
-if [ -f "$HOME/.config/scripts/pythons-are-python3-brew" ]; then
-   source "$HOME/.config/scripts/pythons-are-python3-brew"
+# Bootstrap shell environment (symlinks, launchers, etc.)
+if [ -f "$HOME/.config/scripts/bootstrap" ]; then
+   source "$HOME/.config/scripts/bootstrap"
 fi
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"

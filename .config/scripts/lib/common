@@ -1,0 +1,67 @@
+#!/bin/zsh
+# --- common ---
+#
+# Shared utility functions for bootstrap setup scripts.
+# Sourced by bootstrap before running setup scripts.
+
+DEBUG=${DEBUG:-0}
+
+# Print debug message if DEBUG=1
+debug_echo() {
+  [ "$DEBUG" -eq 1 ] && echo "$@"
+}
+
+# Ensure a directory exists
+ensure_dir() {
+  local dir="$1"
+  if [ ! -d "$dir" ]; then
+    mkdir -p "$dir"
+    debug_echo "Created directory: $dir"
+  fi
+}
+
+# Ensure a symlink exists and points to the correct target
+# Usage: ensure_symlink <symlink_path> <target_path> <name_for_logging>
+ensure_symlink() {
+  local symlink_path="$1"
+  local target_path="$2"
+  local link_name="$3"
+
+  # Check if symlink exists and points to correct target
+  if [ -L "$symlink_path" ]; then
+    local current_target=$(readlink "$symlink_path")
+    if [ "$current_target" = "$target_path" ]; then
+      debug_echo "$link_name symlink already correct. Skipping."
+      return 0
+    else
+      debug_echo "$link_name symlink points to wrong target. Updating..."
+      rm "$symlink_path"
+    fi
+  elif [ -e "$symlink_path" ]; then
+    debug_echo "$link_name exists but is not a symlink. Removing..."
+    rm "$symlink_path"
+  fi
+
+  # Create the symlink
+  ln -sf "$target_path" "$symlink_path"
+  debug_echo "Created $link_name symlink: $symlink_path -> $target_path"
+}
+
+# Check if a file contains a specific version string
+# Usage: needs_update <file_path> <version_string>
+# Returns 0 if update needed, 1 if up to date
+needs_update() {
+  local file_path="$1"
+  local version_string="$2"
+
+  if [ ! -f "$file_path" ]; then
+    debug_echo "$file_path doesn't exist. Needs creation."
+    return 0
+  elif ! grep -q "$version_string" "$file_path" 2>/dev/null; then
+    debug_echo "$file_path is outdated. Needs update."
+    return 0
+  else
+    debug_echo "$file_path is up to date. Skipping."
+    return 1
+  fi
+}
