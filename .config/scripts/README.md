@@ -12,6 +12,7 @@ scripts/
 ├── lib/
 │   └── common             # Shared utility functions
 └── setup/
+    ├── antigravity-launcher-setup
     └── pythons-are-python3-brew
 ```
 
@@ -91,3 +92,15 @@ Creates symlinks so `python` and `python3` point to Homebrew's Python 3.
 - `~/bin/python3` → `/home/linuxbrew/.linuxbrew/bin/python3`
 
 **Undo:** `rm ~/bin/python ~/bin/python3`
+
+### antigravity-launcher-setup
+
+Creates `avg` command to launch Google Antigravity IDE from WSL.
+
+**Creates:**
+- `~/bin/avg` - Launcher script
+
+**Undo:** `rm ~/bin/avg`
+
+**Note:** Requires Windows-side fixes to work properly. See the script header
+for details or run `avg` to test if Antigravity is properly configured.

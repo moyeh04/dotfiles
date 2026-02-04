@@ -1,0 +1,171 @@
+#!/bin/zsh
+# --- antigravity-launcher-setup ---
+#
+# Purpose:
+#   This script creates or updates the "avg" launcher script in ~/bin so that
+#   "avg" works like "code" for VS Code, launching Google Antigravity from WSL
+#   with proper remote workspace connection.
+#
+# This script will create/update the avg launcher in ~/bin which:
+#    - Auto-detects Antigravity installation (standard or Scoop)
+#    - Launches Antigravity with WSL remote connection
+#    - Supports opening files, folders, or new windows
+#
+# Background:
+#   Google Antigravity is an AI-powered IDE built on VS Code. When installed on
+#   Windows and used from WSL, it requires special URI handling to connect to
+#   WSL workspaces. This script creates a launcher that mimics the "code" command
+#   behavior for seamless WSL integration.
+#
+#   IMPORTANT: This script creates the launcher, but you still need to apply the
+#   critical fixes to the Antigravity installation itself:
+#     1. Fix WSL extension ID in Antigravity binary
+#     2. Copy missing helper scripts (wslCode.sh, wslDownload.sh)
+#   See: https://discuss.ai.google.dev/t/antigravity-cli-agy-on-wsl-broken-launcher
+#
+# Usage:
+#   Sourced automatically by bootstrap on shell startup.
+#   Uses needs_update from lib/common for version checking.
+#
+# How to Undo:
+#   To remove the avg launcher, run:
+#      rm ~/bin/avg
+#   This will delete the launcher script. The next shell startup will recreate it
+#   unless you also remove this setup script from setup/.
+
+AVG_LAUNCHER="$HOME/bin/avg"
+SCRIPT_VERSION="VERSION=1.1.0"
+
+# Check if launcher needs updating
+if ! needs_update "$AVG_LAUNCHER" "$SCRIPT_VERSION"; then
+  return 0
+fi
+
+# Create/update the avg launcher script
+cat > "$AVG_LAUNCHER" <<'LAUNCHER_EOF'
+#!/usr/bin/env bash
+# avg - Antigravity WSL Launcher
+# VERSION=1.1.0
+
+set -euo pipefail
+
+# Detect WSL distro name
+detect_distro() {
+    local distro
+    distro=$(wsl.exe -l -v 2>/dev/null | grep -i "running" | awk '{print $1}' | tr -d '\r\0*')
+    if [ -z "$distro" ]; then
+        distro="${WSL_DISTRO_NAME}"
+    fi
+    echo "$distro"
+}
+
+# URL encode the path
+urlencode() {
+    local string="$1"
+    local strlen=${#string}
+    local encoded=""
+    local pos c o
+
+    for (( pos=0 ; pos<strlen ; pos++ )); do
+        c=${string:$pos:1}
+        case "$c" in
+            [-_.~a-zA-Z0-9/] ) o="${c}" ;;
+            * ) printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="${o}"
+    done
+    echo "${encoded}"
+}
+
+# Find Antigravity binary - check multiple locations
+find_antigravity() {
+    local locations=(
+        # Standard Windows installation
+        "/mnt/c/Users/${USER}/AppData/Local/Programs/Antigravity/bin/antigravity"
+        
+        # Scoop user installation
+        "/mnt/c/Users/${USER}/scoop/apps/antigravity/current/bin/antigravity"
+        
+        # Scoop global installation
+        "/mnt/c/ProgramData/scoop/apps/antigravity/current/bin/antigravity"
+    )
+    
+    # Check predefined locations first
+    for loc in "${locations[@]}"; do
+        if [ -f "$loc" ]; then
+            echo "$loc"
+            return 0
+        fi
+    done
+    
+    # If not found, search all users (slower fallback)
+    local found
+    found=$(find /mnt/c/Users/*/AppData/Local/Programs/Antigravity/bin/antigravity 2>/dev/null | head -n1)
+    if [ -n "$found" ]; then
+        echo "$found"
+        return 0
+    fi
+    
+    # Search Scoop installations
+    found=$(find /mnt/c/Users/*/scoop/apps/antigravity/*/bin/antigravity 2>/dev/null | head -n1)
+    if [ -n "$found" ]; then
+        echo "$found"
+        return 0
+    fi
+    
+    return 1
+}
+
+# Get the Antigravity binary path
+ANTIGRAVITY_BIN=$(find_antigravity)
+
+if [ -z "$ANTIGRAVITY_BIN" ]; then
+    echo "ERROR: Antigravity not found in any of the following locations:" >&2
+    echo "  - Standard: C:\\Users\\${USER}\\AppData\\Local\\Programs\\Antigravity" >&2
+    echo "  - Scoop (user): C:\\Users\\${USER}\\scoop\\apps\\antigravity" >&2
+    echo "  - Scoop (global): C:\\ProgramData\\scoop\\apps\\antigravity" >&2
+    echo "" >&2
+    echo "Please install Antigravity first." >&2
+    exit 1
+fi
+
+WSL_DISTRO=$(detect_distro)
+if [ -z "$WSL_DISTRO" ]; then
+    echo "ERROR: Could not detect WSL distro" >&2
+    exit 1
+fi
+
+# If no arguments, open current directory (like `code` does)
+if [ $# -eq 0 ]; then
+    set -- "."
+fi
+
+# Resolve the path
+TARGET_PATH=$(realpath "$1" 2>/dev/null || readlink -f "$1" 2>/dev/null || echo "$1")
+
+if [ ! -e "$TARGET_PATH" ]; then
+    echo "ERROR: Path does not exist: $TARGET_PATH" >&2
+    exit 1
+fi
+
+# Determine if it's a file or folder
+if [ -f "$TARGET_PATH" ]; then
+    SCHEME="file-uri"
+elif [ -d "$TARGET_PATH" ]; then
+    SCHEME="folder-uri"
+else
+    echo "ERROR: Unsupported path type" >&2
+    exit 1
+fi
+
+# Build the URI
+ENCODED_PATH=$(urlencode "$TARGET_PATH")
+URI="vscode-remote://wsl+${WSL_DISTRO}${ENCODED_PATH}"
+
+# Launch Antigravity
+"$ANTIGRAVITY_BIN" "--${SCHEME}" "$URI"
+LAUNCHER_EOF
+
+# Make the launcher executable
+chmod +x "$AVG_LAUNCHER"
+debug_echo "Launcher created/updated successfully"
