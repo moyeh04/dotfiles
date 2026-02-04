@@ -101,6 +101,3 @@ Creates `avg` command to launch Google Antigravity IDE from WSL.
 - `~/bin/avg` - Launcher script
 
 **Undo:** `rm ~/bin/avg`
-
-**Note:** Requires Windows-side fixes to work properly. See the script header
-for details or run `avg` to test if Antigravity is properly configured.

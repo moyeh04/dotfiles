@@ -17,12 +17,6 @@
 #   WSL workspaces. This script creates a launcher that mimics the "code" command
 #   behavior for seamless WSL integration.
 #
-#   IMPORTANT: This script creates the launcher, but you still need to apply the
-#   critical fixes to the Antigravity installation itself:
-#     1. Fix WSL extension ID in Antigravity binary
-#     2. Copy missing helper scripts (wslCode.sh, wslDownload.sh)
-#   See: https://discuss.ai.google.dev/t/antigravity-cli-agy-on-wsl-broken-launcher
-#
 # Usage:
 #   Sourced automatically by bootstrap on shell startup.
 #   Uses needs_update from lib/common for version checking.
