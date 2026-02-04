@@ -131,9 +131,11 @@ enable_autorestart() {
         \$trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay (New-TimeSpan -Seconds 0)
         
         # Override trigger with CIM instance for event-based trigger
+        # Only trigger on NewState=1 (device became Active/connected)
+        # NewState values: 1=Active, 4=NotPresent, 8=Unplugged
         \$CIMTriggerClass = Get-CimClass -ClassName MSFT_TaskEventTrigger -Namespace Root/Microsoft/Windows/TaskScheduler:MSFT_TaskEventTrigger
         \$trigger = New-CimInstance -CimClass \$CIMTriggerClass -ClientOnly
-        \$xmlQuery = '<QueryList><Query><Select Path=' + [char]34 + 'Microsoft-Windows-Audio/Operational' + [char]34 + '>*[System[Provider[@Name=' + [char]34 + 'Microsoft-Windows-Audio' + [char]34 + '] and EventID=65]]</Select></Query></QueryList>'
+        \$xmlQuery = '<QueryList><Query><Select Path=' + [char]34 + 'Microsoft-Windows-Audio/Operational' + [char]34 + '>*[System[Provider[@Name=' + [char]34 + 'Microsoft-Windows-Audio' + [char]34 + '] and EventID=65] and EventData[Data[@Name=' + [char]34 + 'NewState' + [char]34 + ']=' + [char]34 + '1' + [char]34 + ']]</Select></Query></QueryList>'
         \$trigger.Subscription = \$xmlQuery
         \$trigger.Enabled = \$true
         
