@@ -1,0 +1,13 @@
+;; @module remaps
+;; @description Core key remaps — Caps→Esc/Ctrl, LCtrl→Caps/Ctrl, RCtrl→AltShift/Ctrl
+;; @keys caps lctl rctl
+;; @base @escctl @lctlcaps @rctrllang
+
+;; @aliases-start
+  escctl    (tap-hold 100 100 esc lctl)                         ;; tap → Esc,           hold → LCtrl
+  lctlcaps  (tap-hold 250 250 (macro (on-press toggle-vkey caps-on) 1 caps) lctl) ;; tap → Caps+toggle,   hold → LCtrl
+  rctrllang (tap-hold 200 200 (multi lalt lsft) rctl)           ;; tap → (Alt + Shift), hold → RCtrl
+;; @aliases-end
+
+;; @layers-start
+;; @layers-end

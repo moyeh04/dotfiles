@@ -1,0 +1,44 @@
+;; @module german
+;; @description German umlauts & Eszett via Alt combos (ä ö ü ß)
+;; @keys ralt a s o u
+;; @base ralt @de-a @de-s @de-o @de-u
+;;
+;; Mappings:
+;;   RAlt + a  →  ä    (Shift/Caps: Ä)
+;;   RAlt + s  →  ß    (Shift/Caps: ẞ)
+;;   RAlt + o  →  ö    (Shift/Caps: Ö)
+;;   RAlt + u  →  ü    (Shift/Caps: Ü)
+;;
+
+;; @aliases-start
+  de-a (switch 
+    ((and ralt (or lsft rsft) (input virtual caps-on))) (unicode ä) break
+    ((and ralt (or lsft rsft))) (unicode Ä) break
+    ((and ralt (input virtual caps-on))) (unicode Ä) break
+    (ralt) (unicode ä) break
+    () a break)
+  
+  de-s (switch 
+    ((and ralt (or lsft rsft) (input virtual caps-on))) (unicode ß) break
+    ((and ralt (or lsft rsft))) (unicode ẞ) break
+    ((and ralt (input virtual caps-on))) (unicode ẞ) break
+    (ralt) (unicode ß) break
+    () s break)
+
+  de-o (switch 
+    ((and ralt (or lsft rsft) (input virtual caps-on))) (unicode ö) break
+    ((and ralt (or lsft rsft))) (unicode Ö) break
+    ((and ralt (input virtual caps-on))) (unicode Ö) break
+    (ralt) (unicode ö) break
+    () o break)
+
+  de-u (switch 
+    ((and ralt (or lsft rsft) (input virtual caps-on))) (unicode ü) break
+    ((and ralt (or lsft rsft))) (unicode Ü) break
+    ((and ralt (input virtual caps-on))) (unicode Ü) break
+    (ralt) (unicode ü) break
+    () u break)
+;; @aliases-end
+
+;; @layers-start
+;; @layers-end
